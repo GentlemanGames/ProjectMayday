@@ -33,57 +33,68 @@ LiquidCrystal lcd(RS, EN, D4, D5, D6, D7); //Now why am I defining this again? I
 
 
 byte cusChar1 [8] {
-  0b11111,
-  0b01111,
-  0b00111,
-  0b10011,
-  0b10011,
-  0b11001,
-  0b11100,
-  0b11110
+  0b00000,
+  0b00000,
+  0b00000,
+  0b00001,
+  0b00010,
+  0b00010,
+  0b00010,
+  0b00111
 };
 
 byte cusChar2 [8] {
-  0b11111,
-  0b11110,
-  0b00001,
-  0b00001,
-  0b10011,
-  0b00011,
-  0b00001,
-  0b01110
+  0b00000,
+  0b10001,
+  0b00000,
+  0b00100,
+  0b01010,
+  0b00000,
+  0b10001,
+  0b11011
 };
 
-byte cusChar5 [8] {
-  0b11100,
-  0b11101,
-  0b01101,
+byte cusChar3 [8] {
+  0b00000,
+  0b00000,
+  0b00000,
+  0b10000,
+  0b01000,
+  0b01000,
+  0b01000,
+  0b11100
+};
+byte cusChar4[8] {
+  0b01100,
+  0b10001,
+  0b10001,
+  0b10000,
+  0b00000,
+  0b00000,
+  0b00100,
+  0b00011
+};
+byte cusChar5[8] {
+  0b01010,
+  0b00100,
   0b10101,
-  0b10101,
-  0b10110,
-  0b10111,
-  0b00111
-};
-byte cusChar6[8] {
-  0b00111,
-  0b10110,
-  0b10100,
+  0b00100,
+  0b01110,
+  0b11011,
   0b10001,
-  0b10011,
-  0b00111,
-  0b11101,
-  0b11001
+  0b00000
 };
-byte cusChar7[8] {
-  0b11111,
+byte cusChar6[8] = {
+  0b00010,
   0b10001,
-  0b10100,
-  0b10010,
   0b10001,
-  0b10010,
-  0b00110,
-  0b01100
+  0b00001,
+  0b00000,
+  0b00000,
+  0b00100,
+  0b11000
 };
+
 
 
 //from here, we have all of the variable defined and now we need to tell the arduino what to do with them? Right?
@@ -117,72 +128,18 @@ void setup() {
   //Tell it what to display
   lcd.begin(16, 2); //Telling the program how many columns and rows on the display.
 
-  
-  lcd.createChar(1, cusChar1);
-  lcd.createChar(2, cusChar2);
-  lcd.createChar(5, cusChar5);
-  lcd.createChar(6, cusChar6);
-  lcd.createChar(7, cusChar7);
+
+
+  lcd.createChar(1, cusChar1);  //Top Bio block 1
+  lcd.createChar(2, cusChar2);  //Top Bio block 2
+  lcd.createChar(3, cusChar3);  //Top Bio block 3
+  lcd.createChar(4, cusChar4);  //Bottom Bio block 1
+  lcd.createChar(5, cusChar5);  //Bottom Bio block 2
+  lcd.createChar(6, cusChar6);  //Bottom Bio Block 3
 
 
 
-  //top row//
-  lcd.setCursor(0, 0);
-  lcd.write((byte)5);
-
-  lcd.setCursor(1, 0);
-  lcd.write((byte)6);
-
-  lcd.setCursor(2, 0);
-  lcd.write((byte)1);
-
-  lcd.setCursor(3, 0);
-  lcd.write((byte)7);
-
-  lcd.setCursor(4, 0);
-  lcd.write((byte)2);
-  
-  //Second Set
-  
-  lcd.setCursor(5, 0);
-  lcd.write((byte)5);
-
-  lcd.setCursor(6, 0);
-  lcd.write((byte)6);
-
-  lcd.setCursor(7, 0);
-  lcd.write((byte)1);
-
-  lcd.setCursor(8, 0);
-  lcd.write((byte)7);
-
-  lcd.setCursor(9, 0);
-  lcd.write((byte)2);
-
-  //third set
-
-  lcd.setCursor(10, 0);
-  lcd.write((byte)5);
-
-  lcd.setCursor(11, 0);
-  lcd.write((byte)6);
-
-  lcd.setCursor(12, 0);
-  lcd.write((byte)1);
-
-  lcd.setCursor(13, 0);
-  lcd.write((byte)7);
-
-  lcd.setCursor(14, 0);
-  lcd.write((byte)2);
-
-  //fourth set
-
-  lcd.setCursor(15, 0);
-  lcd.write((byte)5);
-
-  //bottom row//
-
+  bioHazard();
 
 
 
@@ -206,87 +163,152 @@ void loop() {
   //  bitSet(leds, i);
   //  updateShiftRegister();
   //  delay(500);
-//}
+  //}
 
 
 
-//
-//
-//Above is Shift Register
-//
-//
-//
+  //
+  //
+  //Above is Shift Register
+  //
+  //
+  //
 
-char key = keypad.getKey();
+  char key = keypad.getKey();
 
-lcd.cursor();
-lcd.blink();
-
-
-
-
-
-
-if (key) {
-  lcd.setCursor(7, 1);
   lcd.cursor();
   lcd.blink();
-  lcd.write(key);
-
-//
-  // Below this is experimental
-//
 
 
 
 
 
-//
-  // Above this is experimental code
-//
+
+  if (key) {
+    lcd.setCursor(7, 1);
+    lcd.cursor();
+    lcd.blink();
+    lcd.write(key);
+
+    //
+    // Below this is experimental
+    //
 
 
-  
-  if (key == '*') {
-    input_password = ""; // clear input password
-    lcd.setCursor(0, 1);
-    lcd.write("  Code Cleared  ");
-    delay(750);
-    lcd.setCursor(0, 1);
-    lcd.write("   Enter Code   ");
-    delay(2500);
-    lcd.setCursor(0, 1);
-    lcd.write("                 ");
-  }
-  else if (key == '#') {
-    if (password == input_password) {
-      lcd.setCursor(1, 1);
-      lcd.write("BOMB DISARMED!");
-      lcd.blink();
-      delay(5000);
+
+
+
+    //
+    // Above this is experimental code
+    //
+
+
+
+    if (key == '*') {
+      input_password = ""; // clear input password
+      lcd.setCursor (0, 1);
+      lcd.write("                ");
+      bioHazard();
+      delay(250);
+      lcd.setCursor(2, 1);
+      lcd.write("Code Cleared");
+      delay(750);
       lcd.setCursor(0, 1);
-
-      delay(15);
-      lcd.write("Press * to Clear");
-    }
-    else {
-      lcd.setCursor(4, 1);
-      lcd.write("BYE BYE!");
-      lcd.blink();
-      delay(5000);
+      lcd.write("                 ");
+      bioHazard();
+      delay(250);
+      bioHazard();
+      lcd.setCursor(3, 1);
+      lcd.write("Enter Code");
+      delay(2500);
+      bioHazard();
       lcd.setCursor(0, 1);
-
-      delay(15);
-      lcd.write("Press * to Clear");
+      lcd.write("                 ");
+      bioHazard();
     }
+    else if (key == '#') {
+      if (password == input_password) {
+        lcd.setCursor(1, 1);
+        lcd.write("BOMB DISARMED!");
+        lcd.blink();
+        delay(5000);
+        lcd.setCursor(0, 1);
 
-    input_password = ""; // clear input password
-  } else {
-    input_password += key; // append new character to input password string
 
+        delay(15);
+        lcd.write("Press * to Clear");
+
+      }
+      else {
+        lcd.setCursor(4, 1);
+        lcd.write("BYE BYE!");
+        lcd.blink();
+        delay(5000);
+        lcd.setCursor(0, 1);
+
+        delay(15);
+        lcd.write("Press * to Clear");
+      }
+
+      input_password = ""; // clear input password
+    } else {
+      input_password += key; // append new character to input password string
+
+    }
   }
 }
+
+void bioHazard() {
+  //Bio Hazard Symbol
+
+  //Top Row Left Side
+  lcd.setCursor(0, 0);
+  lcd.write(byte(1));
+
+  lcd.setCursor(1, 0);
+  lcd.write(byte(2));
+
+  lcd.setCursor(2, 0);
+  lcd.write(byte(3));
+
+  //Bottom Row Left side
+  lcd.setCursor(0, 1);
+  lcd.write(byte(4));
+
+  lcd.setCursor(1, 1);
+  lcd.write(byte(5));
+
+  lcd.setCursor(2, 1);
+  lcd.write(byte(6));
+
+
+  //Top Row Right Side
+
+  lcd.setCursor(13, 0);
+  lcd.write(byte(1));
+
+  lcd.setCursor(14, 0);
+  lcd.write(byte(2));
+
+  lcd.setCursor(15, 0);
+  lcd.write(byte(3));
+
+  //Bottom Row Left side
+  lcd.setCursor(13, 1);
+  lcd.write(byte(4));
+
+  lcd.setCursor(14, 1);
+  lcd.write(byte(5));
+
+  lcd.setCursor(15, 1);
+  lcd.write(byte(6));
+
 }
+
+
+
+
+
 //
 //
 // Below is shift register stuff
