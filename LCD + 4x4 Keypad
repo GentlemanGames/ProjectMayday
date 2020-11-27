@@ -1,0 +1,300 @@
+
+#include <Keypad.h>
+
+String inputString;
+long inputInt;
+
+#include <keypad.h>
+const int ROW_NUM = 4;
+const int COLUMN_NUM = 4;
+int count = 0;
+
+
+
+char keys [ROW_NUM][COLUMN_NUM] = { //Dis be the keys fore the keypad!
+  {'1', '2', '3', 'A'},
+  {'4', '5', '6', 'B'},
+  {'7', '8', '9', 'C'},
+  {'*', '0', '#', 'D'}
+
+};
+byte pin_rows[ROW_NUM] = {9, 8, 7, 6};
+byte pin_columns[COLUMN_NUM] = {A3, A2, A1, A0};
+
+Keypad keypad = Keypad(makeKeymap(keys), pin_rows, pin_columns, ROW_NUM, COLUMN_NUM);
+const String password = "1234";
+String input_password;
+
+#include <LiquidCrystal.h> //Telling the program to reference all of the lower level code in the Library for LiquidCrystal
+
+const int RS = 11, EN = 12, D4 = 2, D5 = 3, D6 = 4, D7 = 5; //This line is telling the arduino which pins on its board are connected to which pins on the LCD, Since we have included the library related to this specific LCD the d4, EN, etc are already defined and registered to the pins on the LCD.
+
+LiquidCrystal lcd(RS, EN, D4, D5, D6, D7); //Now why am I defining this again? Is it simply to show which pins on the LCD are actually in use? Would I add the rest of the 'D' pins if I was using them?
+
+
+byte cusChar1 [8] {
+  0b11111,
+  0b01111,
+  0b00111,
+  0b10011,
+  0b10011,
+  0b11001,
+  0b11100,
+  0b11110
+};
+
+byte cusChar2 [8] {
+  0b11111,
+  0b11110,
+  0b00001,
+  0b00001,
+  0b10011,
+  0b00011,
+  0b00001,
+  0b01110
+};
+
+byte cusChar5 [8] {
+  0b11100,
+  0b11101,
+  0b01101,
+  0b10101,
+  0b10101,
+  0b10110,
+  0b10111,
+  0b00111
+};
+byte cusChar6[8] {
+  0b00111,
+  0b10110,
+  0b10100,
+  0b10001,
+  0b10011,
+  0b00111,
+  0b11101,
+  0b11001
+};
+byte cusChar7[8] {
+  0b11111,
+  0b10001,
+  0b10100,
+  0b10010,
+  0b10001,
+  0b10010,
+  0b00110,
+  0b01100
+};
+
+
+//from here, we have all of the variable defined and now we need to tell the arduino what to do with them? Right?
+
+//Shift Register stuff
+int latchPin = A4;
+int dataPin = A5;
+int clockPin = 13;
+
+byte leds = 0;
+
+void setup() {
+
+  //LED and SHIFT REGISTER stuff here
+
+  //pinMode(latchPin, OUTPUT);
+  //pinMode(dataPin, OUTPUT);
+  //pinMode(clockPin, OUTPUT);
+
+
+  //Above this is LED and ShiftRegister Stuff
+
+
+
+  input_password.reserve(32);
+  inputString.reserve(15);
+  //pinMode(BEEP, OUTPUT);
+
+  //Order of operations. Set the Rows ans column,
+  //Tell the program where to place the cursor or start of the type
+  //Tell it what to display
+  lcd.begin(16, 2); //Telling the program how many columns and rows on the display.
+
+  
+  lcd.createChar(1, cusChar1);
+  lcd.createChar(2, cusChar2);
+  lcd.createChar(5, cusChar5);
+  lcd.createChar(6, cusChar6);
+  lcd.createChar(7, cusChar7);
+
+
+
+  //top row//
+  lcd.setCursor(0, 0);
+  lcd.write((byte)5);
+
+  lcd.setCursor(1, 0);
+  lcd.write((byte)6);
+
+  lcd.setCursor(2, 0);
+  lcd.write((byte)1);
+
+  lcd.setCursor(3, 0);
+  lcd.write((byte)7);
+
+  lcd.setCursor(4, 0);
+  lcd.write((byte)2);
+  
+  //Second Set
+  
+  lcd.setCursor(5, 0);
+  lcd.write((byte)5);
+
+  lcd.setCursor(6, 0);
+  lcd.write((byte)6);
+
+  lcd.setCursor(7, 0);
+  lcd.write((byte)1);
+
+  lcd.setCursor(8, 0);
+  lcd.write((byte)7);
+
+  lcd.setCursor(9, 0);
+  lcd.write((byte)2);
+
+  //third set
+
+  lcd.setCursor(10, 0);
+  lcd.write((byte)5);
+
+  lcd.setCursor(11, 0);
+  lcd.write((byte)6);
+
+  lcd.setCursor(12, 0);
+  lcd.write((byte)1);
+
+  lcd.setCursor(13, 0);
+  lcd.write((byte)7);
+
+  lcd.setCursor(14, 0);
+  lcd.write((byte)2);
+
+  //fourth set
+
+  lcd.setCursor(15, 0);
+  lcd.write((byte)5);
+
+  //bottom row//
+
+
+
+
+
+
+
+
+
+};
+
+void loop() {
+  //
+  //
+  //Below is shift register
+  //
+  //
+  //leds = 0;
+  //updateShiftRegister();
+  //delay(500);
+  //for (int i = 0;i<8; i++){
+  //  bitSet(leds, i);
+  //  updateShiftRegister();
+  //  delay(500);
+//}
+
+
+
+//
+//
+//Above is Shift Register
+//
+//
+//
+
+char key = keypad.getKey();
+
+lcd.cursor();
+lcd.blink();
+
+
+
+
+
+
+if (key) {
+  lcd.setCursor(7, 1);
+  lcd.cursor();
+  lcd.blink();
+  lcd.write(key);
+
+//
+  // Below this is experimental
+//
+
+
+
+
+
+//
+  // Above this is experimental code
+//
+
+
+  
+  if (key == '*') {
+    input_password = ""; // clear input password
+    lcd.setCursor(0, 1);
+    lcd.write("  Code Cleared  ");
+    delay(750);
+    lcd.setCursor(0, 1);
+    lcd.write("   Enter Code   ");
+    delay(2500);
+    lcd.setCursor(0, 1);
+    lcd.write("                 ");
+  }
+  else if (key == '#') {
+    if (password == input_password) {
+      lcd.setCursor(1, 1);
+      lcd.write("BOMB DISARMED!");
+      lcd.blink();
+      delay(5000);
+      lcd.setCursor(0, 1);
+
+      delay(15);
+      lcd.write("Press * to Clear");
+    }
+    else {
+      lcd.setCursor(4, 1);
+      lcd.write("BYE BYE!");
+      lcd.blink();
+      delay(5000);
+      lcd.setCursor(0, 1);
+
+      delay(15);
+      lcd.write("Press * to Clear");
+    }
+
+    input_password = ""; // clear input password
+  } else {
+    input_password += key; // append new character to input password string
+
+  }
+}
+}
+//
+//
+// Below is shift register stuff
+//
+//
+
+//void updateShiftRegister(){
+//digitalWrite(latchPin, LOW);
+//shiftOut(dataPin, clockPin, LSBFIRST, leds);
+//digitalWrite(latchPin, HIGH);
+//}
